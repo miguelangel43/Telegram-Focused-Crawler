@@ -6,8 +6,8 @@ import pandas as pd
 from telegram import SyncTelegramClient 
 
 # Import the crawling and the evaluation strategies
-from mo_balog1 import Balog1
-from ev_recollection_rate import RecollectionRate
+from models.mo_balog1 import Balog1
+from evaluation.ev_recollection_rate import RecollectionRate
 
 # Instanciate the crawling and the evaluation strategies
 telethon_api = SyncTelegramClient()
