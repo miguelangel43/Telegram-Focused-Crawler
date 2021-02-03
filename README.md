@@ -23,7 +23,10 @@ GNU GENERAL PUBLIC LICENSE Version 3 -->
 `telegram_crawler/`
 
 - `models/`: Crawling strategies.
+    - `mo_balog1.py`: Balog1.
+    - `mo_okapi_bm25.py`: Okapi BM25.
 - `evaluation/`: Evaluation strategies.
+    - `ev_recollection_rate.py`: Rate of seed recollection.
 - `database/`: DBMS code.
 - __`crawler.py`__: Focused crawler pipeline.
 - `data_collection.py`: Data collection pipeline. 
