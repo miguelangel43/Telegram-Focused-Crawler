@@ -29,5 +29,5 @@ GNU GENERAL PUBLIC LICENSE Version 3 -->
     - `ev_recollection_rate.py`: Rate of seed recollection.
 - `database/`: DBMS code.
 - __`crawler.py`__: Focused crawler pipeline.
-- `data_collection.py`: Data collection pipeline. 
+- __`data_collection.py`__: Data collection pipeline. 
 - `telegram.py`: Telegram API (Telethon) code.
