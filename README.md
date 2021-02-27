@@ -34,7 +34,7 @@ GNU GENERAL PUBLIC LICENSE Version 3 -->
 - __`data_collection.py`__: Data collection pipeline. 
 - `telegram.py`: Telegram API (Telethon) code.
 
-## Class diagram
+### Class diagram
 
 https://drive.google.com/file/d/1hbKO1SE8_g6lU4V9rld_ckj8CrcaZQR3/view?usp=sharing
 
