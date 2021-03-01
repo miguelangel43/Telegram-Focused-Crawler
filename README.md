@@ -20,7 +20,7 @@ This work draws inspiration from the following papers:
 <!-- ## License
 GNU GENERAL PUBLIC LICENSE Version 3 -->
 
-# File structure
+## File structure
 
 `telegram_crawler/`
 
