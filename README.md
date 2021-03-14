@@ -33,6 +33,7 @@ GNU GENERAL PUBLIC LICENSE Version 3 -->
 - __`crawler.py`__: Focused crawler pipeline.
 - __`data_collection.py`__: Data collection pipeline. 
 - `telegram.py`: Telegram API (Telethon) code.
+- `scraper/`: a potentially more reliable crawling mechanism.
 
 ### Class diagram
 
