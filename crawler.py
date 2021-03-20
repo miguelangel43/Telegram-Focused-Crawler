@@ -22,8 +22,8 @@ evaluation = RecollectionRate(telethon_api)
 
 """
 
-BATCH_SIZE = 50 # Number of messages that will be collected to search for mentions
-NUM_ITERATIONS = 1
+BATCH_SIZE = 1000 # Number of messages that will be collected to search for mentions
+NUM_ITERATIONS = 5
 QUERY = ['covid-19', 'corona']
 
 # Reading the seed groups
@@ -58,5 +58,5 @@ for i in range(NUM_ITERATIONS):
 
 # Evaluation
 print('Evaluating..')
-print('Rate of seed recollection:', evaluation.evaluate(seed, iteration_channels, num_iterations=1)*100, '%')
+print('Rate of seed recollection:', evaluation.evaluate(seed, iteration_channels, num_iterations=2)*100, '%')
 # 0% using all the groups as orginal seed for 2 iterations.
