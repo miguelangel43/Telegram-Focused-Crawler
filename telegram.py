@@ -98,7 +98,6 @@ class SyncTelegramClient:
                     if m.fwd_from:
                         if hasattr(m.fwd_from ,'from_id'):
                             if hasattr(m.fwd_from.from_id, 'channel_id'):
-                                print(m.fwd_from.from_id.channel_id)
                                 new_edges.append([group, m.fwd_from.from_id.channel_id])
                                 if m.fwd_from.from_id.channel_id not in new_groups:
                                     if m.fwd_from.from_id.channel_id not in visited_channels:
@@ -106,8 +105,8 @@ class SyncTelegramClient:
             # The channel contains less messages than BATCH_SIZE
             except BufferError:
                 print('The channel contains less messages than BATCH_SIZE')
-            except:
-                print(group, ' error')
-                time.sleep(1) 
-                pass              
+            # except:
+            #     print(group, ' error')
+            #     time.sleep(1) 
+            #     pass              
         return new_groups, new_edges
