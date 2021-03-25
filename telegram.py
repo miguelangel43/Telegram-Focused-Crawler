@@ -96,8 +96,8 @@ class SyncTelegramClient:
                 for m in messages:
                     # If a msg was forwarded from another channel, append it to the list
                     if m.fwd_from:
-                        print(m.fwd_from)
                         if hasattr(m.fwd_from ,'from_id'):
+                            print(m.fwd_from.from_id)
                             new_edges.append([group, m.fwd_from.from_id.channel_id])
                             if m.fwd_from.from_id.channel_id not in new_groups:
                                 if m.fwd_from.from_id.channel_id not in visited_channels:
