@@ -46,6 +46,7 @@ for i in range(NUM_ITERATIONS):
     print('Finding new channels..')
     groups_and_edges = telethon_api.find_groups_fwd(visited_channels=visited_channels, old_groups = iteration_channels, batch_size=BATCH_SIZE)
     visited_channels += groups_and_edges[0]
+    print('FOUND CHANNELS:', groups_and_edges[0])
     # Rank the groups based on a QUERY
     print('Ranking channels..')
     ranked_channels = model.rank(groups_and_edges[0], QUERY)
