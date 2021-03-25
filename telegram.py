@@ -101,6 +101,9 @@ class SyncTelegramClient:
                             if m.fwd_from.channel_id not in new_groups:
                                 if m.fwd_from.channel_id not in visited_channels:
                                     new_groups.append(m.fwd_from.channel_id)
+            # The channel contains less messages than BATCH_SIZE
+            except BufferError:
+                pass
             except:
                 print(group, ' error')
                 time.sleep(1) 

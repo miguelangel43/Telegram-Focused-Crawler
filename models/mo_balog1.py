@@ -88,7 +88,7 @@ class Balog1:
         return ranked_channels
     
     def get_filtered_channels(self, channels):
-        return [ch[0] for ch in channels if ch[1] > 0.0001]
+        return [ch[0] for ch in channels if ch[1] > 0]
 
 # True Positives: 74
 # True Negatives: 55
