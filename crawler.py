@@ -47,14 +47,14 @@ for i in range(NUM_ITERATIONS):
     groups_and_edges = telethon_api.find_groups_fwd(visited_channels=visited_channels, old_groups = iteration_channels, batch_size=BATCH_SIZE)
     visited_channels += groups_and_edges[0]
     # Rank the groups based on a QUERY
-    # print('Ranking channels..')
-    # ranked_channels = model.rank(groups_and_edges[0], QUERY)
+    print('Ranking channels..')
+    ranked_channels = model.rank(groups_and_edges[0], QUERY)
     # Add the highest ranked channels (to 10%, 20%, 30%? or the channels with a rank coefficient higher than a threshold) to the seed.
     print('Adding highest ranked channels to seed...')
     iteration_channels = groups_and_edges[0]
-    # new_channels = model.get_filtered_channels(ranked_channels)
+    new_channels = model.get_filtered_channels(ranked_channels)
     print(len(iteration_channels), 'new channels added')
-    collected_channels += iteration_channels
+    collected_channels += new_channels
 
 # Evaluation
 print('Evaluating..')
