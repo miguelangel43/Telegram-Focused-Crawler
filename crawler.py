@@ -22,7 +22,7 @@ evaluation = RecollectionRate(telethon_api)
 
 """
 
-BATCH_SIZE = 100 # Number of messages that will be collected to search for mentions
+BATCH_SIZE = 1000 # Number of messages that will be collected to search for mentions
 NUM_ITERATIONS = 5
 QUERY = ['covid-19', 'corona']
 
