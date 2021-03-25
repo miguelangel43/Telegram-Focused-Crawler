@@ -103,7 +103,7 @@ class SyncTelegramClient:
                                     new_groups.append(m.fwd_from.channel_id)
             # The channel contains less messages than BATCH_SIZE
             except BufferError:
-                pass
+                print('The channel contains less messages than BATCH_SIZE')
             except:
                 print(group, ' error')
                 time.sleep(1) 
