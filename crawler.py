@@ -55,7 +55,7 @@ for i in range(NUM_ITERATIONS):
     print('Adding highest ranked channels to seed...')
     iteration_channels = groups_and_edges[0]
     new_channels = model.get_filtered_channels(ranked_channels)
-    print(len(new_channels), 'new channels added,', len(new_channels)/len(iteration_channels)*100, '%')
+    print(len(new_channels), 'new channels added,', int(len(new_channels)/len(iteration_channels)*100), '%', 'of channels')
     collected_channels += new_channels
 
 # Evaluation

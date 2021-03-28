@@ -2,6 +2,7 @@ import json
 from telethon.errors import ChatAdminRequiredError
 from telethon.sync import TelegramClient
 from telethon.tl import functions
+from telethon.errors.rpcerrorlist import ChannelPrivateError
 from tqdm import tqdm
 import time
 import math
@@ -109,7 +110,7 @@ class SyncTelegramClient:
                 print('Channel', group, 'does not exist')
             except BufferError:
                 print('The channel contains less messages than BATCH_SIZE')
-            except telethon.errors.rpcerrorlist.ChannelPrivateError:
+            except ChannelPrivateError:
                 print('Channel', group, 'is private')
             except:
                 print(group, ' error')
