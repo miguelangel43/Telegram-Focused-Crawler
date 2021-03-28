@@ -22,8 +22,8 @@ evaluation = RecollectionRate(telethon_api)
 
 """
 
-BATCH_SIZE = 100 # Number of messages that will be collected to search for mentions
-NUM_ITERATIONS = 1
+BATCH_SIZE = 1000 # Number of messages that will be collected to search for mentions
+NUM_ITERATIONS = 3
 QUERY = ['covid-19', 'corona']
 
 # Reading the seed groups
@@ -31,7 +31,7 @@ seed = pd.read_csv('groups.csv')
 seed = seed.loc[(seed['consp'] == 1.0) & (seed['eng'] != 1.0)]
 seed = seed.drop(columns = ['consp', 'eng'])
 seed.reset_index(inplace=True)
-seed = seed['ch_id'].tolist()[:2]
+seed = seed['ch_id'].tolist()
 
 #original_seed = ['1444228991']
 
@@ -49,8 +49,6 @@ for i in range(NUM_ITERATIONS):
     # Rank the groups based on a QUERY
     print('Ranking channels..')
     ranked_channels = model.rank(groups_and_edges[0], QUERY)
-    print(type(ranked_channels))
-    print(ranked_channels)
     # Add the highest ranked channels (to 10%, 20%, 30%? or the channels with a rank coefficient higher than a threshold) to the seed.
     print('Adding highest ranked channels to seed...')
     iteration_channels = groups_and_edges[0]
@@ -62,4 +60,3 @@ for i in range(NUM_ITERATIONS):
 # Evaluation
 print('Evaluating..')
 print('Rate of seed recollection:', evaluation.evaluate(seed, iteration_channels, num_iterations=2)*100, '%')
-# 0% using all the groups as orginal seed for 2 iterations.
