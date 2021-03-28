@@ -31,7 +31,7 @@ seed = pd.read_csv('groups.csv')
 seed = seed.loc[(seed['consp'] == 1.0) & (seed['eng'] != 1.0)]
 seed = seed.drop(columns = ['consp', 'eng'])
 seed.reset_index(inplace=True)
-seed = seed['ch_id'].tolist()
+seed = seed['ch_id'].tolist()[:2]
 
 #original_seed = ['1444228991']
 
@@ -55,7 +55,7 @@ for i in range(NUM_ITERATIONS):
     print('Adding highest ranked channels to seed...')
     iteration_channels = groups_and_edges[0]
     new_channels = model.get_filtered_channels(ranked_channels)
-    print(len(iteration_channels), 'new channels added')
+    print(len(new_channels), 'new channels added,', len(new_channels)/len(iteration_channels)*100, '%')
     collected_channels += new_channels
 
 # Evaluation
