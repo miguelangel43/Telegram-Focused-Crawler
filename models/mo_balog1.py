@@ -88,7 +88,9 @@ class Balog1:
         return ranked_channels
     
     def get_filtered_channels(self, channels):
-        return [ch[0] for ch in channels if ch[1] > 0.0001]
+        avg_score = sum([ch[1] for ch in channels])/len(channels)
+        filtered_channels = [ch[0] for ch in channels if ch[1] > 0.001]
+        return filtered_channels, avg_score
 
 # True Positives: 74
 # True Negatives: 55

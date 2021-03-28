@@ -6,13 +6,9 @@ class RecollectionRate:
 
     def evaluate(self, seed, collected_channels, num_iterations):
         num_recollected = 0
-        print(len(collected_channels))
         for ch in collected_channels:
             if ch in seed:
                 collected_channels.remove(ch)
-        print(len(collected_channels))
-        print('seed', seed)
-        print('collected_channels', collected_channels)
         iteration_channels = collected_channels
         for i in range(num_iterations):
             print('Iteration:', i+1, 'of', num_iterations)

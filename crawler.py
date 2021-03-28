@@ -54,8 +54,9 @@ for i in range(NUM_ITERATIONS):
     # Add the highest ranked channels (to 10%, 20%, 30%? or the channels with a rank coefficient higher than a threshold) to the seed.
     print('Adding highest ranked channels to seed...')
     iteration_channels = groups_and_edges[0]
-    new_channels = model.get_filtered_channels(ranked_channels)
+    new_channels, avg_score = model.get_filtered_channels(ranked_channels)
     print(len(new_channels), 'new channels added,', int(len(new_channels)/len(iteration_channels)*100), '%', 'of channels')
+    print('Average score:', avg_score)
     collected_channels += new_channels
 
 # Evaluation
