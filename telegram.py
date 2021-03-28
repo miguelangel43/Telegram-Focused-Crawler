@@ -16,6 +16,8 @@ class SyncTelegramClient:
 
     def fetch_messages(self, channel, size=100, max_id=None, min_id=None):
         """Method to fetch messages from a specific channel / group"""
+        #TODO: first fetch the last message to find out how many messages there are in the chat
+        # If there are less messages that size use the number of messages instead of size.
 
         params = [channel, size]
         kwargs = {}
@@ -107,8 +109,10 @@ class SyncTelegramClient:
                 print('Channel', group, 'does not exist')
             except BufferError:
                 print('The channel contains less messages than BATCH_SIZE')
-            # except:
-            #     print(group, ' error')
-            #     time.sleep(1) 
-            #     pass              
+            except telethon.errors.rpcerrorlist.ChannelPrivateError:
+                print('Channel', group, 'is private')
+            except:
+                print(group, ' error')
+                time.sleep(1) 
+                pass              
         return new_groups, new_edges
