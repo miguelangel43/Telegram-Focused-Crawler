@@ -58,7 +58,7 @@ class Balog1:
         size=batch_size,
         max_id= None
         )
-        print('batch_size=', batch_size, '| len(messages)=', len(messages))
+        # print('batch_size=', batch_size, '| len(messages)=', len(messages))
         # Iterate over the messages 
         query = query.lower()
         num_collected_msg = len(messages)
