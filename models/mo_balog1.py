@@ -3,6 +3,7 @@ import statistics
 import numpy as np
 import time
 from tqdm import tqdm
+from telethon.errors.rpcerrorlist import ChannelPrivateError
 
 BATCH_SIZE=1000
 
