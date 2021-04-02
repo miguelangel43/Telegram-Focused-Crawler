@@ -102,6 +102,7 @@ class Balog1:
         return ranked_channels
     
     def get_filtered_channels(self, channels):
+        num_channels = len(channels) if len(channels) else 1 # If there are no channels make it 1 to avoid division by zero
         avg_score = sum([ch[1] for ch in channels])/len(channels)
         filtered_channels = [ch[0] for ch in channels if ch[1] > 0.001]
         return filtered_channels, avg_score
