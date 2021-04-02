@@ -90,7 +90,7 @@ class SyncTelegramClient:
         for group in tqdm(old_groups):
             # Fetch the last BATCH_SIZE messages
             try:
-                channel_data = self.get_channel_info(group)
+                #channel_data = self.get_channel_info(group)
                 # Get the total number of messages in the channel
                 # num_messages = self.fetch_messages(channel=group, size=1, max_id=None)[0].id 
                 # # If there are less messages than BATCH_SIZE, collect all
@@ -115,8 +115,7 @@ class SyncTelegramClient:
             except BufferError:
                 print('The channel contains less messages than BATCH_SIZE')
             except ChannelPrivateError:
+                old_groups.remove(group) # Solves BufferError
                 print('Channel', group, 'is private')
-            except:
-                print(group, ' error') 
-                pass              
+
         return new_groups, new_edges

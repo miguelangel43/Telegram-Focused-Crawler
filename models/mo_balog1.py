@@ -25,7 +25,6 @@ class Balog1:
             return math.log(10 + num_participants)
         # View count-based probability based on the mean of the view count the last 100 msgs 
         elif vers == 3:
-            channel_data = self.telethon_api.get_channel_info(channel)
             messages = self.telethon_api.fetch_messages(
             channel=channel,
             size=100,
@@ -48,7 +47,6 @@ class Balog1:
         batch_size=1000
         # Collect the messages from the channel
         # Call the API to get the channel's messages
-        channel_data = self.telethon_api.get_channel_info(channel)
         # num_messages = int(self.telethon_api.fetch_messages(channel=channel, size=1, max_id=None)[0].id) - 1
         # # If there are less messages than BATCH_SIZE, collect all
         # if num_messages < batch_size:
