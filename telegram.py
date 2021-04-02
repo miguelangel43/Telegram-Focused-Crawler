@@ -112,8 +112,6 @@ class SyncTelegramClient:
                                         new_groups.append(m.fwd_from.from_id.channel_id)
             except ValueError:
                 print('Channel', group, 'does not exist')
-            except BufferError:
-                print('The channel contains less messages than BATCH_SIZE')
             except ChannelPrivateError:
                 old_groups.remove(group) # Solves BufferError
                 print('Channel', group, 'is private')

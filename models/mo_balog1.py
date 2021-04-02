@@ -94,7 +94,10 @@ class Balog1:
                 ranked_channels.append([channel, p_q_ch * self.get_p_ch(2, channel)])
             except ValueError:
                 print('Channel', channel, 'does not exist')
+            except BufferError:
+                print('The channel contains less messages than BATCH_SIZE')
             except ChannelPrivateError:
+                channels.remove(channel) # Solves BufferError
                 print('Channel', channel, 'is private')
 
         ranked_channels.sort(reverse=True, key=lambda tup: tup[1])
