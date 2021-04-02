@@ -47,26 +47,18 @@ class Balog1:
     """ get P(t|ch) """ 
     def get_p_t_ch(self, query, channel):
         # Collect the messages from the channel
-        try:
-            # Call the API to get the channel's messages
-            channel_data = self.telethon_api.get_channel_info(channel)
-            num_messages = self.telethon_api.fetch_messages(channel=group, size=1, max_id=None)[0].id 
-            # If there are less messages than BATCH_SIZE, collect all
-            if num_messages < BATCH_SIZE:
-                BATCH_SIZE = num_messages
-            messages = self.telethon_api.fetch_messages(
-            channel=channel,
-            size=BATCH_SIZE,
-            max_id= None
-            )
-        except ValueError:
-            print('Channel', channel, 'does not exist')
-        except ChannelPrivateError:
-            print('Channel', channel, 'is private')
-        except:
-            print(channel, ' error') 
-            pass     
-        
+        # Call the API to get the channel's messages
+        channel_data = self.telethon_api.get_channel_info(channel)
+        num_messages = self.telethon_api.fetch_messages(channel=group, size=1, max_id=None)[0].id 
+        # If there are less messages than BATCH_SIZE, collect all
+        if num_messages < BATCH_SIZE:
+            BATCH_SIZE = num_messages
+        messages = self.telethon_api.fetch_messages(
+        channel=channel,
+        size=BATCH_SIZE,
+        max_id= None
+        )
+    
         # Iterate over the messages 
         query = query.lower()
         num_collected_msg = len(messages)
@@ -85,7 +77,7 @@ class Balog1:
         for e in p_t_post:
             if e:
                 p_t_ch += e * p_post_ch
-
+        
         return p_t_ch
 
     def rank(self, channels, query):
@@ -93,14 +85,22 @@ class Balog1:
 
         for channel in tqdm(channels):
             """ P(ch|q) """
-            # Get P(q|ch) by multiplying all the P(t|ch) for every term t in the query. Eq 3.
-            p_q_ch = []
-            for q in query:
-                p_q_ch.append(self.get_p_t_ch(q, channel))
-                # print(channel, q, self.get_p_t_ch(q, channel))
-            # p_q_ch = sum([self.get_p_t_ch(q, channel) for q in query])
-            p_q_ch = sum(p_q_ch) # On the paper this is prod, but since I have not done smoothing, prod would smt result in 0
-            ranked_channels.append([channel, p_q_ch * self.get_p_ch(2, channel)])
+            try:
+                # Get P(q|ch) by multiplying all the P(t|ch) for every term t in the query. Eq 3.
+                p_q_ch = []
+                for q in query:
+                    p_q_ch.append(self.get_p_t_ch(q, channel))
+                    # print(channel, q, self.get_p_t_ch(q, channel))
+                # p_q_ch = sum([self.get_p_t_ch(q, channel) for q in query])
+                p_q_ch = sum(p_q_ch) # On the paper this is prod, but since I have not done smoothing, prod would smt result in 0
+                ranked_channels.append([channel, p_q_ch * self.get_p_ch(2, channel)])
+            except ValueError:
+                print('Channel', channel, 'does not exist')
+            except ChannelPrivateError:
+                print('Channel', channel, 'is private')
+            except:
+                print(channel, ' error') 
+                pass   
 
         ranked_channels.sort(reverse=True, key=lambda tup: tup[1])
         return ranked_channels
