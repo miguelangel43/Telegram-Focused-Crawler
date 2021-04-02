@@ -97,8 +97,8 @@ class Balog1:
             except BufferError:
                 print('The channel contains less messages than BATCH_SIZE')
             except ChannelPrivateError:
-                channels.remove(channel) # Solves BufferError
                 print('Channel', channel, 'is private')
+                continue
 
         ranked_channels.sort(reverse=True, key=lambda tup: tup[1])
         return ranked_channels
