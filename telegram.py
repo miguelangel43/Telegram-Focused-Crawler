@@ -15,7 +15,7 @@ class SyncTelegramClient:
     def __init__(self):
         self._client = TelegramClient("session", api_id, api_hash)
 
-    def fetch_messages(self, channel, size=100, max_id=None, min_id=None):
+    def fetch_messages(self, channel, size, max_id=None, min_id=None):
         """Method to fetch messages from a specific channel / group"""
         #TODO: first fetch the last message to find out how many messages there are in the chat
         # If there are less messages that size use the number of messages instead of size.
@@ -92,10 +92,10 @@ class SyncTelegramClient:
             try:
                 channel_data = self.get_channel_info(group)
                 # Get the total number of messages in the channel
-                num_messages = self.fetch_messages(channel=group, size=1, max_id=None)[0].id 
-                # If there are less messages than BATCH_SIZE, collect all
-                if num_messages < batch_size:
-                    batch_size = num_messages
+                # num_messages = self.fetch_messages(channel=group, size=1, max_id=None)[0].id 
+                # # If there are less messages than BATCH_SIZE, collect all
+                # if num_messages < batch_size:
+                #     batch_size = num_messages
                 messages = self.fetch_messages(
                 channel=group,
                 size=batch_size,

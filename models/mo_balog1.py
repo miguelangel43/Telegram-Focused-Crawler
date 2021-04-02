@@ -49,10 +49,10 @@ class Balog1:
         # Collect the messages from the channel
         # Call the API to get the channel's messages
         channel_data = self.telethon_api.get_channel_info(channel)
-        num_messages = int(self.telethon_api.fetch_messages(channel=channel, size=1, max_id=None)[0].id) - 1
-        # If there are less messages than BATCH_SIZE, collect all
-        if num_messages < batch_size:
-            batch_size = num_messages
+        # num_messages = int(self.telethon_api.fetch_messages(channel=channel, size=1, max_id=None)[0].id) - 1
+        # # If there are less messages than BATCH_SIZE, collect all
+        # if num_messages < batch_size:
+        #     batch_size = num_messages
         messages = self.telethon_api.fetch_messages(
         channel=channel,
         size=batch_size,
