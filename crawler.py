@@ -31,7 +31,7 @@ seed = pd.read_csv('groups.csv')
 seed = seed.loc[(seed['consp'] == 1.0) & (seed['eng'] != 1.0)]
 seed = seed.drop(columns = ['consp', 'eng'])
 seed.reset_index(inplace=True)
-seed = seed['ch_id'].tolist()[:2]
+seed = seed['ch_id'].tolist()
 
 #original_seed = ['1444228991']
 
