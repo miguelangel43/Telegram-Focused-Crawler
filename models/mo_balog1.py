@@ -50,7 +50,7 @@ class Balog1:
         try:
             # Call the API to get the channel's messages
             channel_data = self.telethon_api.get_channel_info(channel)
-            num_messages = self.fetch_messages(channel=group, size=1, max_id=None)[0].id 
+            num_messages = self.telethon_api.fetch_messages(channel=group, size=1, max_id=None)[0].id 
             # If there are less messages than BATCH_SIZE, collect all
             if num_messages < BATCH_SIZE:
                 BATCH_SIZE = num_messages
@@ -90,7 +90,7 @@ class Balog1:
 
     def rank(self, channels, query):
         ranked_channels = []
-        
+
         for channel in tqdm(channels):
             """ P(ch|q) """
             # Get P(q|ch) by multiplying all the P(t|ch) for every term t in the query. Eq 3.
