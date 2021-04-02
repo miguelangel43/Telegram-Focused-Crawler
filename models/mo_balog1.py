@@ -41,8 +41,9 @@ class Balog1:
         else: 
             return print('incorrect version number')
 
-    """ get P(t|ch) """ # TODO: Now it only works for a one word query, make it work for a multiple word query
+    """ get P(t|ch) """ 
     def get_p_t_ch(self, query, channel):
+        # Call the API to get the channel's messages
         channel_data = self.telethon_api.get_channel_info(channel)
         messages = self.telethon_api.fetch_messages(
         channel=channel,

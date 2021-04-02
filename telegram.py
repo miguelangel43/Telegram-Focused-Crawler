@@ -91,10 +91,15 @@ class SyncTelegramClient:
             # Fetch the last BATCH_SIZE messages
             try:
                 channel_data = self.get_channel_info(group)
+                # Get the total number of messages in the channel
+                num_messages = self.fetch_messages(channel=group, size=1, max_id=None)[0].id 
+                # If there are less messages than BATCH_SIZE, collect all
+                if num_messages < batch_size:
+                    batch_size = num_messages
                 messages = self.fetch_messages(
                 channel=group,
                 size=batch_size,
-                max_id= None
+                max_id=None
                 )
                 for m in messages:
                     # If a msg was forwarded from another channel, append it to the list
@@ -105,7 +110,6 @@ class SyncTelegramClient:
                                 if m.fwd_from.from_id.channel_id not in new_groups:
                                     if m.fwd_from.from_id.channel_id not in visited_channels:
                                         new_groups.append(m.fwd_from.from_id.channel_id)
-            # The channel contains less messages than BATCH_SIZE
             except ValueError:
                 print('Channel', group, 'does not exist')
             except BufferError:

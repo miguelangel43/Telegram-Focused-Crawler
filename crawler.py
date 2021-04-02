@@ -50,13 +50,12 @@ for i in range(NUM_ITERATIONS):
     print('Ranking channels..')
     ranked_channels = model.rank(groups_and_edges[0], QUERY)
     # Add the highest ranked channels (to 10%, 20%, 30%? or the channels with a rank coefficient higher than a threshold) to the seed.
-    print('Adding highest ranked channels to seed...')
-    iteration_channels = groups_and_edges[0]
-    new_channels, avg_score = model.get_filtered_channels(ranked_channels)
-    print(len(new_channels), 'new channels added,', int(len(new_channels)/len(iteration_channels)*100), '%', 'of channels')
+    print('Adding highest ranked channels to seed...') 
+    iteration_channels, avg_score = model.get_filtered_channels(ranked_channels)
+    print(len(iteration_channels), 'new channels added,', int(len(iteration_channels)/len(groups_and_edges[0])*100), '%', 'of channels')
     print('Average score:', avg_score)
-    collected_channels += new_channels
+    collected_channels += iteration_channels
 
 # Evaluation
 print('Evaluating..')
-print('Rate of seed recollection:', evaluation.evaluate(seed, iteration_channels, num_iterations=2)*100, '%')
+print('Rate of seed recollection:', evaluation.evaluate(seed, collected_channels, num_iterations=1)*100, '%')
