@@ -5,7 +5,6 @@ import time
 from tqdm import tqdm
 from telethon.errors.rpcerrorlist import ChannelPrivateError
 
-BATCH_SIZE=1000
 
 """ With the objective of finding P(ch|q), we find P(ch) and P(t|ch), which is composed of P(t|post) and P(post|ch) """
 class Balog1:
@@ -46,16 +45,17 @@ class Balog1:
 
     """ get P(t|ch) """ 
     def get_p_t_ch(self, query, channel):
+        batch_size=1000
         # Collect the messages from the channel
         # Call the API to get the channel's messages
         channel_data = self.telethon_api.get_channel_info(channel)
-        num_messages = self.telethon_api.fetch_messages(channel=group, size=1, max_id=None)[0].id 
+        num_messages = self.telethon_api.fetch_messages(channel=channel, size=1, max_id=None)[0].id 
         # If there are less messages than BATCH_SIZE, collect all
-        if num_messages < BATCH_SIZE:
-            BATCH_SIZE = num_messages
+        if num_messages < batch_size:
+            batch_size = num_messages
         messages = self.telethon_api.fetch_messages(
         channel=channel,
-        size=BATCH_SIZE,
+        size=batch_size,
         max_id= None
         )
     
@@ -98,9 +98,6 @@ class Balog1:
                 print('Channel', channel, 'does not exist')
             except ChannelPrivateError:
                 print('Channel', channel, 'is private')
-            except:
-                print(channel, ' error') 
-                pass   
 
         ranked_channels.sort(reverse=True, key=lambda tup: tup[1])
         return ranked_channels
