@@ -60,11 +60,11 @@ class Balog1:
             max_id= None
             )
         except ValueError:
-            print('Channel', group, 'does not exist')
+            print('Channel', channel, 'does not exist')
         except ChannelPrivateError:
-            print('Channel', group, 'is private')
+            print('Channel', channel, 'is private')
         except:
-            print(group, ' error') 
+            print(channel, ' error') 
             pass     
         
         # Iterate over the messages 
