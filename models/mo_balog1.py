@@ -89,8 +89,15 @@ class Balog1:
                 p_q_ch = sum(p_q_ch) # On the paper this is prod, but since I have not done smoothing, prod would smt result in 0
                 ranked_channels.append([channel, p_q_ch * self.get_p_ch(2, channel)])
                 #print(ranked_channels[-1])
+            except ValueError:
+                print('Channel', channel, 'does not exist')
+            except BufferError:
+                print('The channel contains less messages than BATCH_SIZE')
+            except ChannelPrivateError:
+                print('Channel', channel, 'is private')
             except:
-                print(channel, ' was not found')
+                print(channel, ' error') 
+                pass
         ranked_channels.sort(reverse=True, key=lambda tup: tup[1])
         return ranked_channels
     

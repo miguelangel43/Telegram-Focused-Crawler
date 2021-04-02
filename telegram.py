@@ -117,7 +117,6 @@ class SyncTelegramClient:
             except ChannelPrivateError:
                 print('Channel', group, 'is private')
             except:
-                print(group, ' error')
-                time.sleep(1) 
+                print(group, ' error') 
                 pass              
         return new_groups, new_edges
