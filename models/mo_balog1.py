@@ -4,6 +4,8 @@ import numpy as np
 import time
 from tqdm import tqdm
 
+BATCH_SIZE=1000
+
 """ With the objective of finding P(ch|q), we find P(ch) and P(t|ch), which is composed of P(t|post) and P(post|ch) """
 class Balog1:
 
@@ -45,9 +47,13 @@ class Balog1:
     def get_p_t_ch(self, query, channel):
         # Call the API to get the channel's messages
         channel_data = self.telethon_api.get_channel_info(channel)
+        num_messages = self.fetch_messages(channel=group, size=1, max_id=None)[0].id 
+        # If there are less messages than BATCH_SIZE, collect all
+        if num_messages < BATCH_SIZE:
+            BATCH_SIZE = num_messages
         messages = self.telethon_api.fetch_messages(
         channel=channel,
-        size=1000,
+        size=BATCH_SIZE,
         max_id= None
         )
         query = query.lower()
