@@ -4,6 +4,7 @@ import numpy as np
 import time
 from tqdm import tqdm
 from telethon.errors.rpcerrorlist import ChannelPrivateError
+from telethon.errors import TakeoutInitDelayError
 
 
 """ With the objective of finding P(ch|q), we find P(ch) and P(t|ch), which is composed of P(t|post) and P(post|ch) """
@@ -98,14 +99,16 @@ class Balog1:
                 print('The channel contains less messages than BATCH_SIZE')
             except ChannelPrivateError:
                 print('Channel', channel, 'is private')
-                continue
+            except TakeoutInitDelayError as e:
+                print('Must wait', e.seconds, 'before takeout')
+                time.sleep(e)
 
         ranked_channels.sort(reverse=True, key=lambda tup: tup[1])
         return ranked_channels
     
     def get_filtered_channels(self, channels):
         num_channels = len(channels) if len(channels) else 1 # If there are no channels make it 1 to avoid division by zero
-        avg_score = sum([ch[1] for ch in channels])/len(channels)
+        avg_score = sum([ch[1] for ch in channels])/num_channels
         filtered_channels = [ch[0] for ch in channels if ch[1] > 0.001]
         return filtered_channels, avg_score
 
