@@ -123,9 +123,11 @@ class SyncTelegramClient:
 
     def search_query(self, channel, query):
         with self._client as client:
+            ch_access_hash = client.get_entity(channel).access_hash
+            channel_object = InputPeerChannel(channel_id=channel, access_hash=ch_access_hash)
             filter = InputMessagesFilterEmpty()
             result = client(SearchRequest(
-                peer=channel,      # On which chat/conversation
+                peer=channel_object,      # On which chat/conversation
                 q=query,      # What to search for
                 filter=filter,  # Filter to use (maybe filter for media)
                 min_date=None,  # Minimum date
@@ -144,3 +146,7 @@ class SyncTelegramClient:
     # api.search_query(InputPeerChannel(channel_id=1444228991, access_hash=8253775144644352419), 'jesus')
     # api.get_channel_info(1444228991)['full_chat']['chat_photo']['access_hash']
     # print(api.search_query(1444228991, 'corona').count)
+    # api.search_query(1444228991, ['corona', 'covid'])
+
+#     >>> with api._client as client:
+# ...     print(client.get_entity(1444228991).restricted)
