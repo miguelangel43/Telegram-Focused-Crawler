@@ -57,6 +57,10 @@ class Balog1:
         size=batch_size,
         max_id= None
         )
+
+        if not len(messages):
+            return 0
+
         # print('batch_size=', batch_size, '| len(messages)=', len(messages))
         # Iterate over the messages 
         query = query.lower()
@@ -102,6 +106,8 @@ class Balog1:
             except TakeoutInitDelayError as e:
                 print('Must wait', e.seconds, 'before takeout')
                 time.sleep(e)
+            except ZeroDivisionError:
+                print('ZeroDivisionError')
 
         ranked_channels.sort(reverse=True, key=lambda tup: tup[1])
         return ranked_channels
