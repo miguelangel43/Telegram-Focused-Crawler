@@ -6,6 +6,9 @@ from telethon.errors.rpcerrorlist import ChannelPrivateError
 from tqdm import tqdm
 import time
 import math
+from telethon.tl.functions.messages import SearchRequest
+from telethon.tl.types import InputMessagesFilterEmpty
+from telethon.tl.types import InputPeerChannel
 
 # Telegram API keys
 api_id = 1812168
@@ -117,3 +120,27 @@ class SyncTelegramClient:
                 print('Channel', group, 'is private')
 
         return new_groups, new_edges
+
+    def search_query(self, channel, query):
+        with self._client as client:
+            filter = InputMessagesFilterEmpty()
+            result = client(SearchRequest(
+                peer=channel,      # On which chat/conversation
+                q=query,      # What to search for
+                filter=filter,  # Filter to use (maybe filter for media)
+                min_date=None,  # Minimum date
+                max_date=None,  # Maximum date
+                offset_id=0,    # ID of the message to use as offset
+                add_offset=0,   # Additional offset
+                limit=10,       # How many results
+                max_id=0,       # Maximum message ID
+                min_id=0,       # Minimum message ID
+                from_id=None,    # Who must have sent the message (peer)
+                hash=0
+            ))
+        return result
+
+    # InputPeerChannel(channel_id=1000910549, access_hash=5858828414308925479)
+    # api.search_query(InputPeerChannel(channel_id=1444228991, access_hash=8253775144644352419), 'jesus')
+    # api.get_channel_info(1444228991)['full_chat']['chat_photo']['access_hash']
+    # print(api.search_query(1444228991, 'corona').count)
