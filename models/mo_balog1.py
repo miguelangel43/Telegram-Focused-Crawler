@@ -110,6 +110,7 @@ class Balog1:
                 print('ZeroDivisionError')
 
         ranked_channels.sort(reverse=True, key=lambda tup: tup[1])
+        print(ranked_channels)
         return ranked_channels
     
     def get_filtered_channels(self, channels):
