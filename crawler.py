@@ -6,7 +6,7 @@ import pandas as pd
 from telegram import SyncTelegramClient 
 
 # Import the crawling and the evaluation strategies
-from models.mo_balog1 import Balog1
+#from models.mo_balog1 import Balog1
 from models.mo_balog2 import Balog2
 from evaluation.ev_recollection_rate import RecollectionRate
 
@@ -24,7 +24,7 @@ evaluation = RecollectionRate(telethon_api)
 """
 
 BATCH_SIZE = 1000 # Number of messages that will be collected to search for mentions
-NUM_ITERATIONS = 5
+NUM_ITERATIONS = 1
 QUERY = ['covid-19', 'corona', 'covid', 'coronavirus']
 
 # Reading the seed groups

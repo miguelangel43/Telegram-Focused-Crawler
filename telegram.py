@@ -1,14 +1,17 @@
 import json
+from tqdm import tqdm
+import time
+import math
+import logging
 from telethon.errors import ChatAdminRequiredError
 from telethon.sync import TelegramClient
 from telethon.tl import functions
 from telethon.errors.rpcerrorlist import ChannelPrivateError
-from tqdm import tqdm
-import time
-import math
 from telethon.tl.functions.messages import SearchRequest
 from telethon.tl.types import InputMessagesFilterEmpty
 from telethon.tl.types import InputPeerChannel
+
+logging.basicConfig(filename='log.log', encoding='utf-8', level=logging.DEBUG)
 
 # Telegram API keys
 api_id = 1812168
@@ -109,7 +112,7 @@ class SyncTelegramClient:
                                         if m.fwd_from.from_id.channel_id not in visited_channels:
                                             new_groups.append(m.fwd_from.from_id.channel_id)
                 except ChannelPrivateError:
-                    print(m.fwd_from.from_id.channel_id, 'is private')
+                    logging.info(str(m.fwd_from.from_id.channel_id) + ' is private')
 
         return new_groups, new_edges
 
