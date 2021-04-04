@@ -20,8 +20,7 @@ class Balog2:
                     if isinstance(m.message, str):
                         #TODO: Check how many times the query occurs in the message 
                         # (character-wise. e.g. if query is 'covid-19', 'covid-19-impfung' also counts)
-                        
-                 
+                                       
     def get_filtered_channels(self, channels):
         #TODO
         return [ch[0] for ch in channels if ch[1] > 0.0001]

@@ -110,9 +110,10 @@ class SyncTelegramClient:
                         if hasattr(m.fwd_from ,'from_id'):
                             if hasattr(m.fwd_from.from_id, 'channel_id'):
                                 new_edges.append([group, m.fwd_from.from_id.channel_id])
-                                if m.fwd_from.from_id.channel_id not in new_groups:
-                                    if m.fwd_from.from_id.channel_id not in visited_channels:
-                                        new_groups.append(m.fwd_from.from_id.channel_id)
+                                if not self.is_private(m.fwd_from.from_id.channel_id):
+                                    if m.fwd_from.from_id.channel_id not in new_groups:
+                                        if m.fwd_from.from_id.channel_id not in visited_channels:
+                                            new_groups.append(m.fwd_from.from_id.channel_id)
             except ValueError:
                 print('Channel', group, 'does not exist')
             except ChannelPrivateError:
@@ -141,6 +142,11 @@ class SyncTelegramClient:
                 hash=0
             ))
         return result
+
+    def is_private(self, channel):
+        with self._client as client:
+            result = client.get_entity(channel).restricted
+        return result # Boolean
 
     # InputPeerChannel(channel_id=1000910549, access_hash=5858828414308925479)
     # api.search_query(InputPeerChannel(channel_id=1444228991, access_hash=8253775144644352419), 'jesus')
