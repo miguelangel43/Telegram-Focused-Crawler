@@ -11,7 +11,7 @@ from telethon.tl.functions.messages import SearchRequest
 from telethon.tl.types import InputMessagesFilterEmpty
 from telethon.tl.types import InputPeerChannel
 
-logging.basicConfig(filename='log.log', encoding='utf-8', level=logging.DEBUG)
+logging.basicConfig(filename='log.log', level=logging.DEBUG)
 
 # Telegram API keys
 api_id = 1812168
