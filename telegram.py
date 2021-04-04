@@ -92,33 +92,24 @@ class SyncTelegramClient:
         new_edges = []
         for group in tqdm(old_groups):
             # Fetch the last BATCH_SIZE messages
-            try:
-                #channel_data = self.get_channel_info(group)
-                # Get the total number of messages in the channel
-                # num_messages = self.fetch_messages(channel=group, size=1, max_id=None)[0].id 
-                # # If there are less messages than BATCH_SIZE, collect all
-                # if num_messages < batch_size:
-                #     batch_size = num_messages
-                messages = self.fetch_messages(
-                channel=group,
-                size=batch_size,
-                max_id=None
-                )
-                for m in messages:
-                    # If a msg was forwarded from another channel, append it to the list
+            messages = self.fetch_messages(
+            channel=group,
+            size=batch_size,
+            max_id=None
+            )
+            for m in messages:
+                # If a msg was forwarded from another channel, append it to the list
+                try:
                     if m.fwd_from:
                         if hasattr(m.fwd_from ,'from_id'):
                             if hasattr(m.fwd_from.from_id, 'channel_id'):
                                 new_edges.append([group, m.fwd_from.from_id.channel_id])
-                                if not self.is_private(m.fwd_from.from_id.channel_id):
+                                if not self.is_private(m.fwd_from.from_id.channel_id): # Just calling is_private on a private channel causes ChannelPrivateError
                                     if m.fwd_from.from_id.channel_id not in new_groups:
                                         if m.fwd_from.from_id.channel_id not in visited_channels:
                                             new_groups.append(m.fwd_from.from_id.channel_id)
-            except ValueError:
-                print('Channel', group, 'does not exist')
-            except ChannelPrivateError:
-                old_groups.remove(group) # Solves BufferError
-                print('Channel', group, 'is private')
+                except ChannelPrivateError:
+                    print(m.fwd_from.from_id.channel_id, 'is private')
 
         return new_groups, new_edges
 

@@ -7,12 +7,12 @@ from telegram import SyncTelegramClient
 
 # Import the crawling and the evaluation strategies
 from models.mo_balog1 import Balog1
-#from models.mo_balog2 import Balog2
+from models.mo_balog2 import Balog2
 from evaluation.ev_recollection_rate import RecollectionRate
 
 # Instanciate the crawling and the evaluation strategies
 telethon_api = SyncTelegramClient()
-model = Balog1(telethon_api)
+model = Balog2(telethon_api)
 evaluation = RecollectionRate(telethon_api)
 
 """ 
@@ -24,7 +24,7 @@ evaluation = RecollectionRate(telethon_api)
 """
 
 BATCH_SIZE = 1000 # Number of messages that will be collected to search for mentions
-NUM_ITERATIONS = 3
+NUM_ITERATIONS = 5
 QUERY = ['covid-19', 'corona', 'covid', 'coronavirus']
 
 # Reading the seed groups
@@ -32,7 +32,7 @@ seed = pd.read_csv('groups.csv')
 seed = seed.loc[(seed['consp'] == 1.0) & (seed['eng'] != 1.0)]
 seed = seed.drop(columns = ['consp', 'eng'])
 seed.reset_index(inplace=True)
-seed = seed['ch_id'].tolist()
+seed = seed['ch_id'].tolist()[:5]
 
 # seed = [1376902017, 1220732962, 1160425299]
 
