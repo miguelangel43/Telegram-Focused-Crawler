@@ -24,7 +24,7 @@ evaluation = RecollectionRate(telethon_api)
 """
 
 BATCH_SIZE = 1000 # Number of messages that will be collected to search for mentions
-NUM_ITERATIONS = 1
+NUM_ITERATIONS = 2
 QUERY = ['corona', 'covid'] # With this query words like 'coronavirus' or 'covid-19' will also count
 
 # Reading the seed groups
@@ -32,7 +32,7 @@ seed = pd.read_csv('groups.csv')
 seed = seed.loc[(seed['consp'] == 1.0) & (seed['eng'] != 1.0)]
 seed = seed.drop(columns = ['consp', 'eng'])
 seed.reset_index(inplace=True)
-seed = seed['ch_id'].tolist()[:5]
+seed = seed['ch_id'].tolist()
 
 # seed = [1376902017, 1220732962, 1160425299]
 
@@ -66,15 +66,14 @@ for i in range(NUM_ITERATIONS):
     print('Average score:', avg_score)
     collected_channels += iteration_channels
 
-# Save the collected channels in a csv file
-with open('crawl_2.csv', 'w') as f:
+# Save the collected channels and the seed in a csv file
+with open('collected_channels.csv', 'w') as f:
     w = csv.writer(f)
     w.writerow(collected_channels)
+with open('seed.csv', 'w') as f:
+    w = csv.writer(f)
+    w.writerow(seed)
 
-# Read
-# with open('test.csv') as f:
-#     reader = csv.reader(f)
-#     your_list = list(reader)
 
 # Evaluation
 #print('Evaluating..')

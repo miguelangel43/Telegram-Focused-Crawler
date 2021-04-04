@@ -18,8 +18,10 @@ class RecollectionRate:
             groups_and_edges = self.telethon_api.find_groups_fwd(collected_channels, iteration_channels)
             iteration_channels = groups_and_edges[0]
             collected_channels += iteration_channels
-
+        
+        # Calculate the num of recollected channels in all iterations except the last one
         for ch in collected_channels:
             if ch in seed:
                 num_recollected += 1
+
         return num_recollected/len(seed)
