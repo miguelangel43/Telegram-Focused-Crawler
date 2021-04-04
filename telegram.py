@@ -141,12 +141,3 @@ class SyncTelegramClient:
         with self._client as client:
             result = client.get_entity(channel).restricted
         return result # Boolean
-
-    # InputPeerChannel(channel_id=1000910549, access_hash=5858828414308925479)
-    # api.search_query(InputPeerChannel(channel_id=1444228991, access_hash=8253775144644352419), 'jesus')
-    # api.get_channel_info(1444228991)['full_chat']['chat_photo']['access_hash']
-    # print(api.search_query(1444228991, 'corona').count)
-    # api.search_query(1444228991, ['corona', 'covid'])
-
-#     >>> with api._client as client:
-# ...     print(client.get_entity(1444228991).restricted)

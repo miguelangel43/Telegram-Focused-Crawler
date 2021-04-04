@@ -39,10 +39,11 @@ class Balog2:
             ranked_channels.append([channel, prob_query_channel])
         # Sort so that highest ranking channels are on top
         ranked_channels.sort(reverse=True, key=lambda tup: tup[1])
-        return ranked_channels
+        # Calculate the average score
+        num_channels = len(ranked_channels) if len(ranked_channels) else 1 # If there are no channels make it 1 to avoid division by zero
+        avg_score = sum([ch[1] for ch in ranked_channels])/num_channels
+        return ranked_channels, avg_score
                         
-    def get_filtered_channels(self, channels):
-        num_channels = len(channels) if len(channels) else 1 # If there are no channels make it 1 to avoid division by zero
-        avg_score = sum([ch[1] for ch in channels])/num_channels
-        filtered_channels = [ch[0] for ch in channels if ch[1] > 0.5]
-        return filtered_channels, avg_score
+    def get_filtered_channels(self, channels, threshold):
+        filtered_channels = [ch[0] for ch in channels if ch[1] > threshold]
+        return filtered_channels

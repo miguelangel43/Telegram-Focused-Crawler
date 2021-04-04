@@ -25,7 +25,7 @@ evaluation = RecollectionRate(telethon_api)
 
 BATCH_SIZE = 1000 # Number of messages that will be collected to search for mentions
 NUM_ITERATIONS = 1
-QUERY = ['covid-19', 'corona', 'covid', 'coronavirus']
+QUERY = ['corona', 'covid'] # With this query words like 'coronavirus' or 'covid-19' will also count
 
 # Reading the seed groups
 seed = pd.read_csv('groups.csv')
@@ -41,6 +41,12 @@ visited_channels = seed
 collected_channels = seed
 iteration_channels = seed # The output channels in iteration i will be the input channels of iteration i+1
 
+print('Ranking seed channels..')
+ranked_seed, seed_score = model.rank(seed, QUERY)
+threshold = 0.75 * seed_score
+print('Seed scores:', seed_score)
+print(threshold, 'will be used as threshold')
+
 for i in range(NUM_ITERATIONS):
     print('Iteration:', i)
     # Find groups given original seed or new channels
@@ -49,10 +55,10 @@ for i in range(NUM_ITERATIONS):
     visited_channels += groups_and_edges[0]
     # Rank the groups based on a QUERY
     print('Ranking channels..')
-    ranked_channels = model.rank(groups_and_edges[0], QUERY)
+    ranked_channels, avg_score = model.rank(groups_and_edges[0], QUERY)
     # Add the highest ranked channels (to 10%, 20%, 30%? or the channels with a rank coefficient higher than a threshold) to the seed.
     print('Adding highest ranked channels to seed...') 
-    iteration_channels, avg_score = model.get_filtered_channels(ranked_channels)
+    iteration_channels = model.get_filtered_channels(ranked_channels, threshold)
     if len(groups_and_edges[0]):
         print(len(iteration_channels), 'new channels added,', int(len(iteration_channels)/len(groups_and_edges[0])*100), '%', 'of channels')
     else:
