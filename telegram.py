@@ -41,30 +41,19 @@ class SyncTelegramClient:
 
     #     return data
 
-    def fetch_messages(self, channel, size):
-        offset_id = 0
-        all_messages = []
-        while True:
-            with self._client as client:
-                history = client(GetHistoryRequest(
-                    peer=channel,
-                    limit=100, # 100 is the max number of messages that can be retrieved per request
-                    offset_date=None,
-                    offset_id=offset_id,
-                    max_id=0,
-                    min_id=0,
-                    add_offset=0,
-                    hash=0
-                ))  
-            if not history.messages:
-                break
-            messages = history.messages
-            all_messages.extend(messages)
-            offset_id = messages[len(messages) - 1].id
-            print(offset_id)
-            if len(all_messages) >= size:
-                break
-        return all_messages
+    def fetch_messages(self, channel, size, offset_id):
+        with self._client as client:
+            history = client(GetHistoryRequest(
+                peer=channel,
+                limit=100, # 100 is the max number of messages that can be retrieved per request
+                offset_date=None,
+                offset_id=offset_id,
+                max_id=0,
+                min_id=0,
+                add_offset=0,
+                hash=0
+            ))  
+        return history.messages
 
     def get_channel_info(self, channel):
         with self._client as client:
@@ -119,26 +108,35 @@ class SyncTelegramClient:
         """
         new_groups = []
         new_edges = []
+        offset_id = 0
         for group in tqdm(old_groups):
-            # Fetch the last BATCH_SIZE messages
-            messages = self.fetch_messages(
-            channel=group,
-            size=batch_size,
-            )
-            for m in messages:
-                # If a msg was forwarded from another channel, append it to the list
-                try:
-                    if m.fwd_from:
-                        if hasattr(m.fwd_from ,'from_id'):
-                            if hasattr(m.fwd_from.from_id, 'channel_id'):
-                                new_edges.append([group, m.fwd_from.from_id.channel_id])
-                                if not self.is_private(m.fwd_from.from_id.channel_id): # Just calling is_private on a private channel causes ChannelPrivateError
-                                    if m.fwd_from.from_id.channel_id not in new_groups:
-                                        if m.fwd_from.from_id.channel_id not in visited_channels:
-                                            new_groups.append(m.fwd_from.from_id.channel_id)
-                except ChannelPrivateError:
-                    logging.info(str(m.fwd_from.from_id.channel_id) + ' is private')
-
+            total_messages = 0
+            while True:
+                # Fetch the last 100 messages
+                messages = self.fetch_messages(
+                channel=group,
+                size=100,
+                offset_id=offset_id
+                )
+                if not messages:
+                    break
+                for m in messages:
+                    # If a msg was forwarded from another channel, append it to the list
+                    try:
+                        if m.fwd_from:
+                            if hasattr(m.fwd_from ,'from_id'):
+                                if hasattr(m.fwd_from.from_id, 'channel_id'):
+                                    new_edges.append([group, m.fwd_from.from_id.channel_id])
+                                    if not self.is_private(m.fwd_from.from_id.channel_id): # Just calling is_private on a private channel causes ChannelPrivateError
+                                        if m.fwd_from.from_id.channel_id not in new_groups:
+                                            if m.fwd_from.from_id.channel_id not in visited_channels:
+                                                new_groups.append(m.fwd_from.from_id.channel_id)
+                    except ChannelPrivateError:
+                        logging.info(str(m.fwd_from.from_id.channel_id) + ' is private')
+                offset_id = messages[len(messages) - 1].id
+                total_messages += len(messages)
+                if total_messages >= batch_size:
+                    break
         return new_groups, new_edges
 
     def search_query(self, channel, query):
