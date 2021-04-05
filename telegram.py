@@ -10,6 +10,7 @@ from telethon.errors.rpcerrorlist import ChannelPrivateError
 from telethon.tl.functions.messages import SearchRequest
 from telethon.tl.types import InputMessagesFilterEmpty
 from telethon.tl.types import InputPeerChannel
+from telethon.tl.functions.messages import GetHistoryRequest
 
 logging.basicConfig(filename='log.log', level=logging.DEBUG)
 
@@ -141,3 +142,19 @@ class SyncTelegramClient:
         with self._client as client:
             result = client.get_entity(channel).restricted
         return result # Boolean
+
+    def get_num_messages(self, channel):
+        with self._client as client:
+            ch_access_hash = client.get_entity(channel).access_hash
+            channel_object = InputPeerChannel(channel_id=channel, access_hash=ch_access_hash)
+            result = client(GetHistoryRequest(
+                peer=channel_object,
+                offset_id=0,
+                offset_date=None,
+                add_offset=0,
+                limit=1,
+                max_id=0,
+                min_id=0,
+                hash=0
+            ))
+        return result.count
