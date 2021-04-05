@@ -22,24 +22,38 @@ class SyncTelegramClient:
     def __init__(self):
         self._client = TelegramClient("session", api_id, api_hash)
 
-    def fetch_messages(self, channel, size, max_id=None, min_id=None):
-        """Method to fetch messages from a specific channel / group"""
-        #TODO: first fetch the last message to find out how many messages there are in the chat
-        # If there are less messages that size use the number of messages instead of size.
+    # def fetch_messages(self, channel, size, max_id=None, min_id=None):
+    #     """Method to fetch messages from a specific channel / group"""
+    #     #TODO: first fetch the last message to find out how many messages there are in the chat
+    #     # If there are less messages that size use the number of messages instead of size.
 
-        params = [channel, size]
-        kwargs = {}
+    #     params = [channel, size]
+    #     kwargs = {}
 
-        # The telethon module has issues if a keyword passed is None, so we will add the keyword
-        # only if it is not None
-        for key in ['max_id', 'min_id']:
-            if locals()[key] is not None:
-                kwargs[key] = locals()[key]
+    #     # The telethon module has issues if a keyword passed is None, so we will add the keyword
+    #     # only if it is not None
+    #     for key in ['max_id', 'min_id']:
+    #         if locals()[key] is not None:
+    #             kwargs[key] = locals()[key]
 
+    #     with self._client as client:
+    #         data = client.get_messages(*params, **kwargs)
+
+    #     return data
+
+    def fetch_messages(self, channel, size):
         with self._client as client:
-            data = client.get_messages(*params, **kwargs)
-
-        return data
+            posts = client(GetHistoryRequest(
+                peer=channel,
+                limit=size,
+                offset_date=None,
+                offset_id=0,
+                max_id=0,
+                min_id=0,
+                add_offset=0,
+                hash=0
+            ))  
+        return posts.messages
 
     def get_channel_info(self, channel):
         with self._client as client:
@@ -99,7 +113,6 @@ class SyncTelegramClient:
             messages = self.fetch_messages(
             channel=group,
             size=batch_size,
-            max_id=None
             )
             for m in messages:
                 # If a msg was forwarded from another channel, append it to the list
