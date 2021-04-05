@@ -42,18 +42,29 @@ class SyncTelegramClient:
     #     return data
 
     def fetch_messages(self, channel, size):
-        with self._client as client:
-            posts = client(GetHistoryRequest(
-                peer=channel,
-                limit=size,
-                offset_date=None,
-                offset_id=0,
-                max_id=0,
-                min_id=0,
-                add_offset=0,
-                hash=0
-            ))  
-        return posts.messages
+        offset_id = 0
+        all_messages = []
+        while True:
+            with self._client as client:
+                history = client(GetHistoryRequest(
+                    peer=channel,
+                    limit=100, # 100 is the max number of messages that can be retrieved per request
+                    offset_date=None,
+                    offset_id=offset_id,
+                    max_id=0,
+                    min_id=0,
+                    add_offset=0,
+                    hash=0
+                ))  
+            if not history.messages:
+                break
+            messages = history.messages
+            all_messages.extend(messages)
+            offset_id = messages[len(messages) - 1].id
+            print(offset_id)
+            if len(all_messages) >= size:
+                break
+        return all_messages
 
     def get_channel_info(self, channel):
         with self._client as client:

@@ -24,7 +24,7 @@ evaluation = RecollectionRate(telethon_api)
 """
 
 BATCH_SIZE = 1000 # Number of messages that will be collected to search for mentions
-NUM_ITERATIONS = 2
+NUM_ITERATIONS = 1
 QUERY = ['corona', 'covid'] # With this query words like 'coronavirus' or 'covid-19' will also count
 
 # Reading the seed groups
