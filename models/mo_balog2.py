@@ -14,6 +14,7 @@ class Balog2:
         ranked_channels = []
 
         for channel in tqdm(channels):
+            num_messages = self.telethon_api.get_num_messages(channel)
             prob_query_posts = 0 # P(q|post)
             for term in query:
                 messages_object = self.telethon_api.search_query(channel, term)
@@ -34,7 +35,7 @@ class Balog2:
                         if term in word.lower():
                             num_t_post += 1
                     prob_query_posts += num_t_post/num_all_terms_post
-            prob_query_channel = prob_query_posts #TODO: divide by total number of msgs in chat
+            prob_query_channel = prob_query_posts/num_messages
             # Add channel with score
             ranked_channels.append([channel, prob_query_channel])
         # Sort so that highest ranking channels are on top
