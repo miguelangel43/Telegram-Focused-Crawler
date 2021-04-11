@@ -5,7 +5,7 @@ import time
 from tqdm import tqdm
 from telethon.tl.types import InputPeerChannel
 
-class Balog2:
+class Simple:
 
     def __init__(self, telethon_api):
         self.telethon_api = telethon_api
@@ -15,24 +15,14 @@ class Balog2:
 
         for channel in tqdm(channels):
             num_messages = self.telethon_api.get_num_messages(channel)
-            prob_query_posts = 0 # P(q|post)
+            count_all_terms = 0
             for term in query:
                 messages_object = self.telethon_api.search_query(channel, term)
-                # Get all the messages where the term of the query appears
-                messages = messages_object.messages
-                for m in messages:
-                    # Transform the message string in a list of words
-                    m_as_list = m.message.split()
-                    num_t_post = 0
-                    num_all_terms_post = len(m_as_list)
-                    if num_all_terms_post == 0:
-                        break
-                    for word in m_as_list:
-                        if term in word.lower():
-                            num_t_post += 1
-                    prob_query_posts += num_t_post/num_all_terms_post
-            prob_query_channel = prob_query_posts/num_messages
-            # Add channel with score
+                count_term =  messages_object.count
+                count_all_terms += count_term
+
+            prob_query_channel = count_all_terms/num_messages
+            # Add channel and score
             ranked_channels.append([channel, prob_query_channel])
         # Sort so that highest ranking channels are on top
         ranked_channels.sort(reverse=True, key=lambda tup: tup[1])

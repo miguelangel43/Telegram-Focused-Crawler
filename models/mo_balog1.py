@@ -29,7 +29,6 @@ class Balog1:
             messages = self.telethon_api.fetch_messages(
             channel=channel,
             size=100,
-            max_id= None
             )
             view_count = []
             for m in messages:
@@ -52,10 +51,9 @@ class Balog1:
         # # If there are less messages than BATCH_SIZE, collect all
         # if num_messages < batch_size:
         #     batch_size = num_messages
-        messages = self.telethon_api.fetch_messages(
+        messages = self.telethon_api.fetch_messages_msg(
         channel=channel,
         size=batch_size,
-        max_id= None
         )
 
         if not len(messages):
@@ -109,15 +107,16 @@ class Balog1:
             except ZeroDivisionError:
                 print('ZeroDivisionError')
 
+        # Sort so that highest ranking channels are on top
         ranked_channels.sort(reverse=True, key=lambda tup: tup[1])
-        print(ranked_channels)
-        return ranked_channels
+        # Calculate the average score
+        num_channels = len(ranked_channels) if len(ranked_channels) else 1 # If there are no channels make it 1 to avoid division by zero
+        avg_score = sum([ch[1] for ch in ranked_channels])/num_channels
+        return ranked_channels, avg_score
     
-    def get_filtered_channels(self, channels):
-        num_channels = len(channels) if len(channels) else 1 # If there are no channels make it 1 to avoid division by zero
-        avg_score = sum([ch[1] for ch in channels])/num_channels
-        filtered_channels = [ch[0] for ch in channels if ch[1] > 0.001]
-        return filtered_channels, avg_score
+    def get_filtered_channels(self, channels, threshold):
+        filtered_channels = [ch[0] for ch in channels if ch[1] > threshold]
+        return filtered_channels
 
 # True Positives: 74
 # True Negatives: 55

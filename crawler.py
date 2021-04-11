@@ -6,13 +6,14 @@ import pandas as pd
 from telegram import SyncTelegramClient 
 
 # Import the crawling and the evaluation strategies
-#from models.mo_balog1 import Balog1
+from models.mo_balog1 import Balog1
 from models.mo_balog2 import Balog2
+from models.simple import Simple
 from evaluation.ev_recollection_rate import RecollectionRate
 
 # Instanciate the crawling and the evaluation strategies
 telethon_api = SyncTelegramClient()
-model = Balog2(telethon_api)
+model = Simple(telethon_api)
 evaluation = RecollectionRate(telethon_api)
 
 """ 
@@ -24,7 +25,7 @@ evaluation = RecollectionRate(telethon_api)
 """
 
 BATCH_SIZE = 1000 # Number of messages that will be collected to search for mentions
-NUM_ITERATIONS = 1
+NUM_ITERATIONS = 2
 QUERY = ['corona', 'covid'] # With this query words like 'coronavirus' or 'covid-19' will also count
 
 # Reading the seed groups
@@ -32,7 +33,7 @@ seed = pd.read_csv('groups.csv')
 seed = seed.loc[(seed['consp'] == 1.0) & (seed['eng'] != 1.0)]
 seed = seed.drop(columns = ['consp', 'eng'])
 seed.reset_index(inplace=True)
-seed = seed['ch_id'].tolist()[:2]
+seed = seed['ch_id'].tolist()[:20]
 
 # seed = [1376902017, 1220732962, 1160425299]
 
@@ -56,7 +57,7 @@ for i in range(NUM_ITERATIONS):
     # Rank the groups based on a QUERY
     print('Ranking channels..')
     ranked_channels, avg_score = model.rank(groups_and_edges[0], QUERY)
-    # Add the highest ranked channels (to 10%, 20%, 30%? or the channels with a rank coefficient higher than a threshold) to the seed.
+    # Add the highest ranked channels to the seed.
     print('Adding highest ranked channels to seed...') 
     iteration_channels = model.get_filtered_channels(ranked_channels, threshold)
     if len(groups_and_edges[0]):

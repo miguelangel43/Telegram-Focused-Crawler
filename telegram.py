@@ -41,6 +41,7 @@ class SyncTelegramClient:
 
     #     return data
 
+    # Call the API once to fetch 100 messages
     def fetch_messages(self, channel, size, offset_id):
         with self._client as client:
             history = client(GetHistoryRequest(
@@ -54,6 +55,32 @@ class SyncTelegramClient:
                 hash=0
             ))  
         return history.messages
+
+    # Call the API as many times as necessary to fetch size messages
+    def fetch_messages_msg(self, channel, size):
+        offset_id = 0
+        all_messages = []
+        while True:
+            with self._client as client:
+                history = client(GetHistoryRequest(
+                    peer=channel,
+                    limit=100, # 100 is the max number of messages that can be retrieved per request
+                    offset_date=None,
+                    offset_id=offset_id,
+                    max_id=0,
+                    min_id=0,
+                    add_offset=0,
+                    hash=0
+                ))  
+            if not history.messages:
+                break
+            messages = history.messages
+            all_messages.extend(messages)
+            offset_id = messages[len(messages) - 1].id
+            if len(all_messages) >= size:
+                break
+        return all_messages
+
 
     def get_channel_info(self, channel):
         with self._client as client:
@@ -108,8 +135,8 @@ class SyncTelegramClient:
         """
         new_groups = []
         new_edges = []
-        offset_id = 0
         for group in tqdm(old_groups):
+            offset_id = 0
             total_messages = 0
             while True:
                 # Fetch the last 100 messages
@@ -118,6 +145,7 @@ class SyncTelegramClient:
                 size=100,
                 offset_id=offset_id
                 )
+                print(offset_id)
                 if not messages:
                     break
                 for m in messages:
