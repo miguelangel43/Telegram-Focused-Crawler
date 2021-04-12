@@ -13,7 +13,7 @@ from evaluation.ev_recollection_rate import RecollectionRate
 
 # Instanciate the crawling and the evaluation strategies
 telethon_api = SyncTelegramClient()
-model = Simple(telethon_api)
+model = Balog2(telethon_api)
 evaluation = RecollectionRate(telethon_api)
 
 """ 

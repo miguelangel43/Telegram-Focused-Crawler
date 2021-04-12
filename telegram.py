@@ -15,8 +15,10 @@ from telethon.tl.functions.messages import GetHistoryRequest
 logging.basicConfig(filename='log.log', level=logging.DEBUG)
 
 # Telegram API keys
-api_id = 1812168
-api_hash = '57d99f51542be90739730033e553b7e8'
+# api_id = 1812168
+# api_hash = '57d99f51542be90739730033e553b7e8'
+api_id = 3271466
+api_hash = '13fac1c8e8feba6a98f64f67d17399db'
 
 class SyncTelegramClient:
     def __init__(self):
@@ -122,7 +124,7 @@ class SyncTelegramClient:
                 print("failed")
 
     """ This function does not work in Ipython """
-    def find_groups_fwd(self, visited_channels, old_groups, batch_size=500):
+    def find_groups_fwd(self, visited_channels, old_groups, batch_size=1000):
         """Finds forwarded messages in old_groups and returns the channels those messages were sent from along with the edges.
         Args:
             visited_channels: all channels visited so far, to avoid visiting them again.
@@ -145,7 +147,6 @@ class SyncTelegramClient:
                 size=100,
                 offset_id=offset_id
                 )
-                print(offset_id)
                 if not messages:
                     break
                 for m in messages:
