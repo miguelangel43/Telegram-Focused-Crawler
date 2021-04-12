@@ -20,11 +20,11 @@ evaluation_strat = RecollectionRate(telethon_api)
 NUM_ITERATIONS = 1
 
 # Read the collected channels and the seed
-with open('collected_channels_simple.csv') as f:
+with open('collected_channels_balog.csv') as f:
     reader = csv.reader(f)
     collected_channels = list(reader)
 collected_channels = list(map(int, collected_channels[0]))
-with open('seed_simple.csv') as f:
+with open('seed_balog.csv') as f:
     reader = csv.reader(f)
     seed = list(reader)
 seed = list(map(int, seed[0]))
