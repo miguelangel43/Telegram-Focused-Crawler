@@ -15,8 +15,11 @@ from telethon.tl.functions.messages import GetHistoryRequest
 logging.basicConfig(filename='log.log', level=logging.DEBUG)
 
 # Telegram API keys
+# Localy
 # api_id = 1812168
 # api_hash = '57d99f51542be90739730033e553b7e8'
+
+# Remotely
 api_id = 3271466
 api_hash = '13fac1c8e8feba6a98f64f67d17399db'
 
@@ -141,12 +144,16 @@ class SyncTelegramClient:
             offset_id = 0
             total_messages = 0
             while True:
-                # Fetch the last 100 messages
-                messages = self.fetch_messages(
-                channel=group,
-                size=100,
-                offset_id=offset_id
-                )
+                try:
+                    # Fetch the last 100 messages
+                    messages = self.fetch_messages(
+                    channel=group,
+                    size=100,
+                    offset_id=offset_id
+                    )
+                except ValueError:
+                    print('ValueError in channel', group)
+                    break
                 if not messages:
                     break
                 for m in messages:

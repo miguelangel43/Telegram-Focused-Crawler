@@ -4,20 +4,21 @@ from tqdm import tqdm
 from telegram import SyncTelegramClient 
 from evaluation.ev_recollection_rate import RecollectionRate
 
-# TODO:
+
 """
 1. Read seed used when executing crawler.py
 2. Read the collected_channels 
 3. Remove the seed from the collected channels
 4. Get 10 random samples of 1% or 2% of the collected channels
 5. Perform evaluation on them
-6. Plot how the rate of seed recollection changes with the size of the sample
 """
 
 telethon_api = SyncTelegramClient()
 evaluation_strat = RecollectionRate(telethon_api)
 
 NUM_ITERATIONS = 1
+PERCENTAGE = 2
+NUM_SAMPLES = 10
 
 # Read the collected channels and the seed
 with open('collected_channels_balog.csv') as f:
@@ -34,11 +35,11 @@ for ch in collected_channels:
         collected_channels.remove(ch)
 
 # Get 10 random samples of 1% or 2% of the collected channels
-percentage = 1
+percentage = PERCENTAGE
 k = len(collected_channels) * percentage // 100
 print('Getting 10 random samples of', percentage, 'percent of the population.', k, 'channels out of', len(collected_channels))
 samples = []
-for i in range(10):
+for i in range(NUM_SAMPLES):
     random_sample = [int(collected_channels[i]) for i in random.sample(range(len(collected_channels)), k)]
     samples.append(random_sample)
 # Perform evaluation on every sample
