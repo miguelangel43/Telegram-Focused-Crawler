@@ -1,5 +1,4 @@
 import math
-import statistics
 import numpy as np
 import time
 from tqdm import tqdm
@@ -12,7 +11,6 @@ class Balog2:
 
     def rank(self, channels, query):
         ranked_channels = []
-
         for channel in tqdm(channels):
             num_messages = self.telethon_api.get_num_messages(channel)
             prob_query_posts = 0 # P(q|post)

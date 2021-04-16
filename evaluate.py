@@ -66,12 +66,12 @@ if result:
 # To be run only the first time, s.t. we create the file
 with open('rate_of_recollection.csv', mode='w') as f:
     writer = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-    writer.writerow(['SEED_FILE', 'COLLECTED_CHANNELS_FILE', 'Percentage', 'Average Score', 'Scores', 'Number of groups',
-    'Total number of groups', 'Number of samples', 'Number of iterations', 'Batch size', 'Date'])
+    writer.writerow(['Date', 'SEED_FILE', 'COLLECTED_CHANNELS_FILE', 'Percentage', 'Average Score', 'Scores', 'Number of groups',
+    'Total number of groups', 'Number of samples', 'Number of iterations', 'Batch size'])
 
 # Save the data in the csv file
 with open('rate_of_recollection.csv', mode='a') as f:
     writer = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-    writer.writerow([SEED_FILE, COLLECTED_CHANNELS_FILE, PERCENTAGE,  avg_score, result, k, 
-    num_total_groups, NUM_SAMPLES, NUM_ITERATIONS, BATCH_SIZE, datetime.datetime.now()])
+    writer.writerow([datetime.datetime.now(), SEED_FILE, COLLECTED_CHANNELS_FILE, PERCENTAGE,  avg_score, result, k, 
+    num_total_groups, NUM_SAMPLES, NUM_ITERATIONS, BATCH_SIZE])
 
