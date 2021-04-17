@@ -20,21 +20,29 @@ telethon_api = SyncTelegramClient()
 evaluation_strat = RecollectionRate(telethon_api)
 
 NUM_ITERATIONS = 1
-PERCENTAGE = 1
-NUM_SAMPLES = 1
+PERCENTAGE = 2
+NUM_SAMPLES = 10
 BATCH_SIZE = 1000
-SEED_FILE = 'seed_balog.csv'
-COLLECTED_CHANNELS_FILE = 'collected_channels_balog.csv'
+SEED_FILE = 'seed.csv'
+COLLECTED_CHANNELS_FILE = 'collected_channels.csv'
+MODEL = 'Simple'
 
 # Read the collected channels and the seed
 with open(COLLECTED_CHANNELS_FILE) as f:
     reader = csv.reader(f)
     collected_channels = list(reader)
 collected_channels = list(map(int, collected_channels[0]))
-with open(SEED_FILE) as f:
-    reader = csv.reader(f)
-    seed = list(reader)
-seed = list(map(int, seed[0]))
+
+# with open(SEED_FILE) as f:
+#     reader = csv.reader(f)
+#     seed = list(reader)
+# seed = list(map(int, seed[0]))
+seed = pd.read_csv('groups.csv')
+seed = seed.loc[(seed['consp'] == 1.0) & (seed['eng'] != 1.0)]
+seed = seed.drop(columns = ['consp', 'eng'])
+seed.reset_index(inplace=True)
+seed = seed['ch_id'].tolist()[:20]
+
 # Remove the seed from the collected channels
 for ch in collected_channels:
     if ch in seed:
@@ -64,14 +72,14 @@ if result:
     print('Average score:', sum(result)/len(result))
 
 # To be run only the first time, s.t. we create the file
-with open('rate_of_recollection.csv', mode='w') as f:
-    writer = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-    writer.writerow(['Date', 'SEED_FILE', 'COLLECTED_CHANNELS_FILE', 'Percentage', 'Average Score', 'Scores', 'Number of groups',
-    'Total number of groups', 'Number of samples', 'Number of iterations', 'Batch size'])
+# with open('rate_of_recollection.csv', mode='w') as f:
+#     writer = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+#     writer.writerow(['Date', 'Model', 'Percentage', 'Average Score', 'Scores', 'Number of groups',
+#     'Total number of groups', 'Number of samples', 'Number of iterations', 'Batch size'])
 
 # Save the data in the csv file
 with open('rate_of_recollection.csv', mode='a') as f:
     writer = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-    writer.writerow([datetime.datetime.now(), SEED_FILE, COLLECTED_CHANNELS_FILE, PERCENTAGE,  avg_score, result, k, 
+    writer.writerow([datetime.datetime.now(), MODEL, PERCENTAGE,  avg_score, result, k, 
     num_total_groups, NUM_SAMPLES, NUM_ITERATIONS, BATCH_SIZE])
 

@@ -7,7 +7,6 @@ import datetime
 from telegram import SyncTelegramClient 
 
 # Import the crawling and the evaluation strategies
-from models.mo_balog1 import Balog1
 from models.mo_balog2 import Balog2
 from models.simple import Simple
 from evaluation.ev_recollection_rate import RecollectionRate
@@ -15,10 +14,10 @@ from evaluation.ev_recollection_rate import RecollectionRate
 # Instanciate the crawling and the evaluation strategies
 telethon_api = SyncTelegramClient()
 
-model_name = 'Balog' # For the log
-model = Balog2(telethon_api)
+model_name = 'Simple' # For the log
+model = Simple(telethon_api)
 
-evaluation = RecollectionRate(telethon_api)
+#evaluation = RecollectionRate(telethon_api)
 
 """ 
     Visited channels: all channels that have already analyzed. It's importat to keep track of them so that we don't analyze them again.
@@ -30,7 +29,7 @@ evaluation = RecollectionRate(telethon_api)
 
 BATCH_SIZE = 1000 # Number of messages that will be collected to search for mentions
 NUM_ITERATIONS = 2
-QUERY = ['corona', 'covid'] # With this query words like 'coronavirus' or 'covid-19' will also count
+QUERY = ['corona', 'covid', 'qanon', 'querdenk', 'giftspritz', 'impf'] # With this query words like 'coronavirus' or 'covid-19' will also count
 THRESHOLD_IN_PERCENTAGE = 0.75
 
 # Reading the seed groups
@@ -38,7 +37,7 @@ seed = pd.read_csv('groups.csv')
 seed = seed.loc[(seed['consp'] == 1.0) & (seed['eng'] != 1.0)]
 seed = seed.drop(columns = ['consp', 'eng'])
 seed.reset_index(inplace=True)
-seed = seed['ch_id'].tolist()[:2]
+seed = seed['ch_id'].tolist()[:20]
 
 # Initializing variables
 seed = seed
@@ -47,10 +46,10 @@ collected_channels = seed
 iteration_channels = seed # The output channels in iteration i will be the input channels of iteration i+1
 
 # Initializing csv file. To be run only the first time, s.t. the csv file is created
-with open('crawls.csv', mode='w') as f:
-    writer = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-    writer.writerow(['Crawler', 'Iteration', 'Total Iterations', 'Seed size', 'Seed', 'Collected channels',
-    'Ranked channels', 'Iteration channels', 'Threshold', 'Threshold percentage', 'Average Score', 'Date'])
+# with open('crawls.csv', mode='w') as f:
+#     writer = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+#     writer.writerow(['Date', 'Crawler', 'Retrieved messages per group', 'Iteration', 'Total Iterations', 'Seed size', 'Query', 'Threshold',
+#     'Threshold percentage', 'Average Score', 'Seed', 'Collected channels', 'Ranked channels', 'Iteration channels'])
 
 print('Ranking seed channels..')
 ranked_seed, seed_score = model.rank(seed, QUERY)
@@ -79,8 +78,8 @@ for i in range(NUM_ITERATIONS):
     # Save the data in the csv file
     with open('crawls.csv', mode='a') as f:
         writer = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-        writer.writerow([model_name, i, NUM_ITERATIONS,  len(seed), seed, collected_channels, 
-        ranked_channels, iteration_channels, threshold, THRESHOLD_IN_PERCENTAGE, avg_score, datetime.datetime.now()])
+        writer.writerow([datetime.datetime.now(), model_name, BATCH_SIZE, i+1, NUM_ITERATIONS, len(seed), QUERY, threshold, 
+        THRESHOLD_IN_PERCENTAGE, avg_score, seed, collected_channels, ranked_channels, iteration_channels])
 
 # Save the collected channels and the seed in a csv file
 with open('collected_channels.csv', 'w') as f:
