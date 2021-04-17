@@ -139,7 +139,7 @@ class SyncTelegramClient:
                 ch_origin to ch_destination.
         """
         new_groups = []
-        new_edges = []
+        #new_edges = []
         for group in tqdm(old_groups):
             offset_id = 0
             total_messages = 0
@@ -162,7 +162,7 @@ class SyncTelegramClient:
                         if m.fwd_from:
                             if hasattr(m.fwd_from ,'from_id'):
                                 if hasattr(m.fwd_from.from_id, 'channel_id'):
-                                    new_edges.append([group, m.fwd_from.from_id.channel_id])
+                                    #new_edges.append([group, m.fwd_from.from_id.channel_id])
                                     if not self.is_private(m.fwd_from.from_id.channel_id): # Just calling is_private on a private channel causes ChannelPrivateError
                                         if m.fwd_from.from_id.channel_id not in new_groups:
                                             if m.fwd_from.from_id.channel_id not in visited_channels:
@@ -173,7 +173,7 @@ class SyncTelegramClient:
                 total_messages += len(messages)
                 if total_messages >= batch_size:
                     break
-        return new_groups, new_edges
+        return new_groups#, new_edges
 
     def search_query(self, channel, query):
         with self._client as client:

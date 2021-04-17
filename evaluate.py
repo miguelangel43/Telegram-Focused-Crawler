@@ -20,7 +20,7 @@ telethon_api = SyncTelegramClient()
 evaluation_strat = RecollectionRate(telethon_api)
 
 NUM_ITERATIONS = 1
-PERCENTAGE = 2
+PERCENTAGE = 1
 NUM_SAMPLES = 10
 BATCH_SIZE = 1000
 SEED_FILE = 'seed.csv'
