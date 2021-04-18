@@ -14,8 +14,8 @@ from evaluation.ev_recollection_rate import RecollectionRate
 # Instanciate the crawling and the evaluation strategies
 telethon_api = SyncTelegramClient()
 
-model_name = 'Simple' # For the log
-model = Simple(telethon_api)
+model_name = 'Balog' # For the log
+model = Balog2(telethon_api)
 
 #evaluation = RecollectionRate(telethon_api)
 
@@ -88,4 +88,3 @@ with open('collected_channels.csv', 'w') as f:
 with open('seed.csv', 'w') as f:
     w = csv.writer(f)
     w.writerow(seed)
-print(len(seed))

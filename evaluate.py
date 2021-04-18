@@ -25,7 +25,7 @@ NUM_SAMPLES = 10
 BATCH_SIZE = 1000
 SEED_FILE = 'seed.csv'
 COLLECTED_CHANNELS_FILE = 'collected_channels.csv'
-MODEL = 'Simple'
+MODEL = 'Balog'
 
 # Read the collected channels and the seed
 with open(COLLECTED_CHANNELS_FILE) as f:
@@ -33,15 +33,16 @@ with open(COLLECTED_CHANNELS_FILE) as f:
     collected_channels = list(reader)
 collected_channels = list(map(int, collected_channels[0]))
 
-# with open(SEED_FILE) as f:
-#     reader = csv.reader(f)
-#     seed = list(reader)
-# seed = list(map(int, seed[0]))
-seed = pd.read_csv('groups.csv')
-seed = seed.loc[(seed['consp'] == 1.0) & (seed['eng'] != 1.0)]
-seed = seed.drop(columns = ['consp', 'eng'])
-seed.reset_index(inplace=True)
-seed = seed['ch_id'].tolist()[:20]
+with open(SEED_FILE) as f:
+    reader = csv.reader(f)
+    seed = list(reader)
+seed = list(map(int, seed[0]))
+
+# seed = pd.read_csv('groups.csv')
+# seed = seed.loc[(seed['consp'] == 1.0) & (seed['eng'] != 1.0)]
+# seed = seed.drop(columns = ['consp', 'eng'])
+# seed.reset_index(inplace=True)
+# seed = seed['ch_id'].tolist()[:20]
 
 # Remove the seed from the collected channels
 for ch in collected_channels:
