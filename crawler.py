@@ -7,17 +7,18 @@ import datetime
 from telegram import SyncTelegramClient 
 
 # Import the crawling and the evaluation strategies
-from models.mo_balog2 import Balog2
+from models.balog import Balog
 from models.simple import Simple
-from evaluation.ev_recollection_rate import RecollectionRate
+from models.simple_subs import SimpleSubs
+from models.simple_views import SimpleViews
+from models.balog_subs import BalogSubs
+from models.balog_views import BalogViews
 
 # Instanciate the crawling and the evaluation strategies
 telethon_api = SyncTelegramClient()
 
-model_name = 'Balog' # For the log
-model = Balog2(telethon_api)
-
-#evaluation = RecollectionRate(telethon_api)
+model_name = 'Simple_subs' # For the log
+model = BalogSubs(telethon_api)
 
 """ 
     Visited channels: all channels that have already analyzed. It's importat to keep track of them so that we don't analyze them again.

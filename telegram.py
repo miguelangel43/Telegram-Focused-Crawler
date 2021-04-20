@@ -24,38 +24,36 @@ class SyncTelegramClient:
     def __init__(self):
         self._client = TelegramClient("session", api_id, api_hash)
 
-    # def fetch_messages(self, channel, size, max_id=None, min_id=None):
-    #     """Method to fetch messages from a specific channel / group"""
-    #     #TODO: first fetch the last message to find out how many messages there are in the chat
-    #     # If there are less messages that size use the number of messages instead of size.
-
-    #     params = [channel, size]
-    #     kwargs = {}
-
-    #     # The telethon module has issues if a keyword passed is None, so we will add the keyword
-    #     # only if it is not None
-    #     for key in ['max_id', 'min_id']:
-    #         if locals()[key] is not None:
-    #             kwargs[key] = locals()[key]
-
-    #     with self._client as client:
-    #         data = client.get_messages(*params, **kwargs)
-
-    #     return data
+    def fetch_messages_old(self, channel, size, max_id=None, min_id=None):
+        """Method to fetch messages from a specific channel / group
+            Telethon docs don't recomend to use this function anymore (outdated)"""
+        params = [channel, size]
+        kwargs = {}
+        # The telethon module has issues if a keyword passed is None, so we will add the keyword
+        # only if it is not None
+        for key in ['max_id', 'min_id']:
+            if locals()[key] is not None:
+                kwargs[key] = locals()[key]
+        with self._client as client:
+            data = client.get_messages(*params, **kwargs)
+        return data
 
     # Call the API once to fetch 100 messages
-    def fetch_messages(self, channel, size, offset_id):
+    def fetch_messages(self, channel, size, offset_id=None):
         with self._client as client:
-            history = client(GetHistoryRequest(
-                peer=channel,
-                limit=100, # 100 is the max number of messages that can be retrieved per request
-                offset_date=None,
-                offset_id=offset_id,
-                max_id=0,
-                min_id=0,
-                add_offset=0,
-                hash=0
-            ))  
+            try:
+                history = client(GetHistoryRequest(
+                    peer=channel,
+                    limit=size, # 100 is the max number of messages that can be retrieved per request
+                    offset_date=None,
+                    offset_id=offset_id,
+                    max_id=0,
+                    min_id=0,
+                    add_offset=0,
+                    hash=0
+                )) 
+            except ChannelPrivateError:
+                pass
         return history.messages
 
     # Call the API as many times as necessary to fetch size messages
@@ -111,8 +109,25 @@ class SyncTelegramClient:
         # channel_name = 'ATTILA HILDMANN OFFICIAL ⚫️⚪️🔴⚔️'
         return self.get_channel_info(str(channel_name))["full_chat"]["id"]
 
-    def get_channel_num_participants(self, channel_data):
-        return channel_data["full_chat"]["participants_count"]
+    def get_avg_view_count(self, channel_name):
+        # Fetch the last 100 messages
+        try:
+            messages = self.fetch_messages(channel=channel_name, size=100, offset_id=0)
+        except ValueError:
+            print('ValueError in channel', channel_name)
+        # Calculate avg view count
+        views = []
+        avg_view_count = 0
+        for m in messages:
+            if m.views:
+                views.append(m.views)
+        if len(views):
+            avg_view_count = sum(views)/len(views)
+        return avg_view_count
+
+    def get_channel_num_participants(self, channel):
+        with self._client as client:
+            return client(functions.channels.GetFullChannelRequest(channel=channel)).full_chat.participants_count
 
     # Tries to join th channels/groups in the list that it takes as input
     def join_channels(self, new_groups):

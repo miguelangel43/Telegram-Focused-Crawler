@@ -4,7 +4,7 @@ import random
 import csv
 from tqdm import tqdm
 from telegram import SyncTelegramClient 
-from evaluation.ev_recollection_rate import RecollectionRate
+from evaluation.recollection_rate import RecollectionRate
 
 
 """
@@ -20,7 +20,7 @@ telethon_api = SyncTelegramClient()
 evaluation_strat = RecollectionRate(telethon_api)
 
 NUM_ITERATIONS = 1
-PERCENTAGE = 1
+PERCENTAGE = 2
 NUM_SAMPLES = 10
 BATCH_SIZE = 1000
 SEED_FILE = 'seed.csv'
