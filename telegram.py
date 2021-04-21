@@ -181,8 +181,7 @@ class SyncTelegramClient:
                                                 new_groups.append(m.fwd_from.from_id.channel_id)
                                                 new_edges.append([group, m.fwd_from.from_id.channel_id])
                     except ChannelPrivateError:
-                        try:
-                            self.protected_channels += 1
+                        self.protected_channels += 1
                         pass
                 offset_id = messages[len(messages) - 1].id
                 total_messages += len(messages)
