@@ -38,7 +38,7 @@ seed_input = pd.read_csv('groups.csv')
 seed_input = seed_input.loc[(seed_input['consp'] == 1.0) & (seed_input['eng'] != 1.0)]
 seed_input = seed_input.drop(columns = ['consp', 'eng'])
 seed_input.reset_index(inplace=True)
-seed_input = seed_input['ch_id'].tolist()[:1]
+seed_input = seed_input['ch_id'].tolist()[:20]
 
 # Initializing variables
 seed = list(seed_input)
