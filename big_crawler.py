@@ -6,14 +6,6 @@ import datetime
 
 from telegram import SyncTelegramClient 
 
-# Import the crawling and the evaluation strategies
-from models.balog import Balog
-from models.simple import Simple
-from models.simple_subs import SimpleSubs
-from models.simple_views import SimpleViews
-from models.balog_subs import BalogSubs
-from models.balog_views import BalogViews
-
 # Instanciate the crawling and the evaluation strategies
 telethon_api = SyncTelegramClient()
 
