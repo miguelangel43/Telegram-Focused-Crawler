@@ -20,12 +20,12 @@ telethon_api = SyncTelegramClient()
 evaluation_strat = RecollectionRate(telethon_api)
 
 NUM_ITERATIONS = 1
-PERCENTAGE = 2
+PERCENTAGE = 1
 NUM_SAMPLES = 10
 BATCH_SIZE = 1000
 SEED_FILE = 'seed.csv'
 COLLECTED_CHANNELS_FILE = 'collected_channels.csv'
-MODEL = 'Balog'
+MODEL = 'Simple Subs'
 
 # Read the collected channels and the seed
 with open(COLLECTED_CHANNELS_FILE) as f:

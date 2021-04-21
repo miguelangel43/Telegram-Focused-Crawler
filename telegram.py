@@ -23,6 +23,7 @@ api_hash = '57d99f51542be90739730033e553b7e8'
 class SyncTelegramClient:
     def __init__(self):
         self._client = TelegramClient("session", api_id, api_hash)
+        self.protected_channels = list()
 
     def fetch_messages_old(self, channel, size, max_id=None, min_id=None):
         """Method to fetch messages from a specific channel / group
@@ -150,8 +151,8 @@ class SyncTelegramClient:
             new_edges: a list of lists [[ch_destination ,ch_origin]]. This means that a message was forwarded from
                 ch_origin to ch_destination.
         """
-        new_groups = []
-        #new_edges = []
+        new_groups = list()
+        new_edges = list()
         for group in tqdm(old_groups):
             offset_id = 0
             total_messages = 0
@@ -174,18 +175,19 @@ class SyncTelegramClient:
                         if m.fwd_from:
                             if hasattr(m.fwd_from ,'from_id'):
                                 if hasattr(m.fwd_from.from_id, 'channel_id'):
-                                    #new_edges.append([group, m.fwd_from.from_id.channel_id])
                                     if not self.is_private(m.fwd_from.from_id.channel_id): # Just calling is_private on a private channel causes ChannelPrivateError
                                         if m.fwd_from.from_id.channel_id not in new_groups:
                                             if m.fwd_from.from_id.channel_id not in visited_channels:
                                                 new_groups.append(m.fwd_from.from_id.channel_id)
+                                                new_edges.append([group, m.fwd_from.from_id.channel_id])
                     except ChannelPrivateError:
+                        self.protected_channels.append(m.fwd_from.from_id.channel_id)
                         pass
                 offset_id = messages[len(messages) - 1].id
                 total_messages += len(messages)
                 if total_messages >= batch_size:
                     break
-        return new_groups#, new_edges
+        return new_groups, new_edges
 
     def search_query(self, channel, query):
         with self._client as client:
