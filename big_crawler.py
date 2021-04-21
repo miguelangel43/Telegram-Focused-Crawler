@@ -36,10 +36,10 @@ collected_channels = list(seed_input)
 iteration_channels = list(seed_input) # The output channels in iteration i will be the input channels of iteration i+1
 
 # Initializing csv file. To be run only the first time, s.t. the csv file is created with the proper column names
-# with open('big_crawls.csv', mode='w') as f:
-#     writer = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-#     writer.writerow(['Date', 'Retrieved messages per group', 'Iteration', 'Total Iterations', 'Seed size', 'Num iteration channels',
-#      'Num collected channels','Query', 'Seed', 'Collected channels', 'Iteration channels', 'Protected channels', 'Edges'])
+with open('big_crawls.csv', mode='w') as f:
+    writer = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+    writer.writerow(['Date', 'Retrieved messages per group', 'Iteration', 'Total Iterations', 'Seed size', 'Num iteration channels',
+     'Num collected channels','Query', 'Seed', 'Collected channels', 'Iteration channels', 'Edges'])
 
 
 for i in range(NUM_ITERATIONS):
@@ -58,8 +58,7 @@ for i in range(NUM_ITERATIONS):
     with open('big_crawls.csv', mode='a') as f:
         writer = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
         writer.writerow([datetime.datetime.now(), BATCH_SIZE, i+1, NUM_ITERATIONS, len(seed), len(iteration_channels),
-        len(collected_channels) , QUERY, seed, collected_channels, iteration_channels, telethon_api.protected_channels, iteration_edges])
-    print('Found protected channels:', telethon_api.protected_channels)
+        len(collected_channels) , QUERY, seed, collected_channels, iteration_channels, iteration_edges])
 
 # # Save the collected channels and the seed in a csv file
 # with open('collected_channels.csv', 'w') as f:
