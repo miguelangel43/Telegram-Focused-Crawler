@@ -9,9 +9,6 @@ from telegram import SyncTelegramClient
 # Instanciate the crawling and the evaluation strategies
 telethon_api = SyncTelegramClient()
 
-model_name = 'Big Crawler' # For the log
-model = SimpleSubs(telethon_api)
-
 """ 
     Visited channels: all channels that have already analyzed. It's importat to keep track of them so that we don't analyze them again.
     Seed: we begin iteration 0 with them. We also use them as an evaluation metric in the rate of original seed recollection.
