@@ -23,7 +23,7 @@ api_hash = '57d99f51542be90739730033e553b7e8'
 class SyncTelegramClient:
     def __init__(self):
         self._client = TelegramClient("session", api_id, api_hash)
-        self.protected_channels = list()
+        self.protected_channels = 0
 
     def fetch_messages_old(self, channel, size, max_id=None, min_id=None):
         """Method to fetch messages from a specific channel / group
@@ -181,7 +181,8 @@ class SyncTelegramClient:
                                                 new_groups.append(m.fwd_from.from_id.channel_id)
                                                 new_edges.append([group, m.fwd_from.from_id.channel_id])
                     except ChannelPrivateError:
-                        self.protected_channels.append(m.fwd_from.from_id.channel_id)
+                        try:
+                            self.protected_channels += 1
                         pass
                 offset_id = messages[len(messages) - 1].id
                 total_messages += len(messages)

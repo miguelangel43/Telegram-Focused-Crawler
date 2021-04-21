@@ -36,10 +36,10 @@ collected_channels = list(seed_input)
 iteration_channels = list(seed_input) # The output channels in iteration i will be the input channels of iteration i+1
 
 # Initializing csv file. To be run only the first time, s.t. the csv file is created with the proper column names
-with open('big_crawls.csv', mode='w') as f:
-    writer = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-    writer.writerow(['Date', 'Retrieved messages per group', 'Iteration', 'Total Iterations', 'Seed size', 'Num iteration channels',
-     'Num collected channels','Query', 'Seed', 'Collected channels', 'Iteration channels', 'Protected channels', 'Edges'])
+# with open('big_crawls.csv', mode='w') as f:
+#     writer = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+#     writer.writerow(['Date', 'Retrieved messages per group', 'Iteration', 'Total Iterations', 'Seed size', 'Num iteration channels',
+#      'Num collected channels','Query', 'Seed', 'Collected channels', 'Iteration channels', 'Protected channels', 'Edges'])
 
 
 for i in range(NUM_ITERATIONS):
