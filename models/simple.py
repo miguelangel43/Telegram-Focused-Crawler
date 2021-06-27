@@ -4,6 +4,7 @@ import numpy as np
 import time
 from tqdm import tqdm
 from telethon.tl.types import InputPeerChannel
+from telethon.errors.rpcerrorlist import ChannelPrivateError
 
 class Simple:
 
@@ -14,16 +15,19 @@ class Simple:
         ranked_channels = []
 
         for channel in tqdm(channels):
-            num_messages = self.telethon_api.get_num_messages(channel)
-            count_all_terms = 0
-            for term in query:
-                messages_object = self.telethon_api.search_query(channel, term)
-                count_term =  messages_object.count
-                count_all_terms += count_term
+            try:
+                num_messages = self.telethon_api.get_num_messages(channel)
+                count_all_terms = 0
+                for term in query:
+                    messages_object = self.telethon_api.search_query(channel, term)
+                    count_term =  messages_object.count
+                    count_all_terms += count_term
 
-            prob_query_channel = count_all_terms/num_messages
-            # Add channel and score
-            ranked_channels.append([channel, prob_query_channel])
+                prob_query_channel = count_all_terms/num_messages
+                # Add channel and score
+                ranked_channels.append([channel, prob_query_channel])
+            except ChannelPrivateError:
+                pass
         # Sort so that highest ranking channels are on top
         ranked_channels.sort(reverse=True, key=lambda tup: tup[1])
         # Calculate the average score

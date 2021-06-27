@@ -4,6 +4,7 @@ import numpy as np
 import time
 from tqdm import tqdm
 from telethon.tl.types import InputPeerChannel
+from telethon.errors.rpcerrorlist import ChannelPrivateError
 
 class SimpleViews:
 
@@ -13,19 +14,24 @@ class SimpleViews:
     def rank(self, channels, query):
         ranked_channels = []
         for channel in tqdm(channels):
-            num_messages = self.telethon_api.get_num_messages(channel)
-            num_subs = self.telethon_api.get_channel_num_participants(channel)
-            count_all_terms = 0
-            for term in query:
-                messages_object = self.telethon_api.search_query(channel, term)
-                count_term =  messages_object.count
-                count_all_terms += count_term
-            # Calculate probabilities
-            prob_query_channel = count_all_terms/num_messages
-            prob_channel = self.telethon_api.get_avg_view_count(channel)/num_subs
-            prob_channel_query = prob_query_channel * prob_channel
-            # Add channel and score
-            ranked_channels.append([channel, prob_channel_query])
+            try:
+                num_messages = self.telethon_api.get_num_messages(channel)
+                num_subs = self.telethon_api.get_channel_num_participants(channel)
+                count_all_terms = 0
+                for term in query:
+                    messages_object = self.telethon_api.search_query(channel, term)
+                    count_term =  messages_object.count
+                    count_all_terms += count_term
+                # Calculate probabilities
+                prob_query_channel = count_all_terms/num_messages
+                prob_channel = self.telethon_api.get_avg_view_count(channel)/num_subs
+                prob_channel_query = prob_query_channel * prob_channel
+                # Add channel and score
+                ranked_channels.append([channel, prob_channel_query])
+            except ChannelPrivateError:
+                pass
+            except ZeroDivisionError:
+                pass
         # Sort so that highest ranking channels are on top
         ranked_channels.sort(reverse=True, key=lambda tup: tup[1])
         # Calculate the average score
